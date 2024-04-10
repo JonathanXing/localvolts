@@ -63,7 +63,7 @@ class LocalvoltsSensor(SensorEntity):
 
     @property
     def EarningsFlexUp(self) -> str | None:
-        return "earninsgFlexUpValue"
+        return "earningsFlexUpValue"
 
     @property
     def unique_id(self):
@@ -102,7 +102,7 @@ class LocalvoltsSensor(SensorEntity):
         #if (self.last_interval is None) or (from_time > self.last_interval + timedelta(seconds=15)):
         if (self.last_interval is None) or (from_time > self.last_interval):
             #First time through the loop, or else it is the first time running in a new 5min interval 
-            _LOGGER.debug("New interval so retrieve the latest earninsgFlexUp")
+            _LOGGER.debug("New interval so retrieve the latest earningsFlexUp")
             url = "https://api.localvolts.com/v1/customer/interval?NMI=" + self.nmi_id + "&from=" + from_time + "&to=" + to_time
             
             headers = {
@@ -115,7 +115,7 @@ class LocalvoltsSensor(SensorEntity):
             # Optional: If the response is JSON, you can convert it to a Python dictionary:
             data = response.json()
             
-            # Now, extract the 'earninsgFlexUp' field from the data
+            # Now, extract the 'earningsFlexUp' field from the data
             
             for item in data:
 
@@ -127,15 +127,15 @@ class LocalvoltsSensor(SensorEntity):
                 if quality == 'exp':
                     self.last_interval = item['intervalEnd']
                     _LOGGER.debug("intervalEnd = %s", self.last_interval)
-                    new_value = round(item['earninsgFlexUp'] / 100, 2)
+                    new_value = round(item['earningsFlexUp'] / 100, 2)
                     # Update the value if it's different
                     if self._attr_native_value != new_value:
                         self._attr_native_value = new_value
-                    _LOGGER.debug("earninsgsFlexUp = %s", self._attr_native_value)
+                    _LOGGER.debug("earningssFlexUp = %s", self._attr_native_value)
                 else:
                     _LOGGER.debug("Skipping forecast quality data.  Only exp will do.")
-    #            self._attr_native_value = round(item['earninsgFlexUp'] / 100, 2)
+    #            self._attr_native_value = round(item['earningsFlexUp'] / 100, 2)
                 
         else:
-            _LOGGER.debug("earninsgFlexUp did not change.  Still in same interval.")
+            _LOGGER.debug("earningsFlexUp did not change.  Still in same interval.")
 
